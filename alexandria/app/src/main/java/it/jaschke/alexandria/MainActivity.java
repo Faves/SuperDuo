@@ -37,6 +37,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
     public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
 
+    private final int POSITION_ITEM_LIST_OF_BOOK = 0;
+    private final int POSITION_ITEM_ADD_BOOK = 1;
+    private final int POSITION_ITEM_ABOUT = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,30 +68,68 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     public void onNavigationDrawerItemSelected(int position) {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment nextFragment;
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.container);
+        Fragment nextFragment = null;
 
         switch (position){
             default:
-            case 0:
-                nextFragment = new ListOfBooks();
+            case POSITION_ITEM_LIST_OF_BOOK:
+                if (currentFragment == null || !(currentFragment instanceof ListOfBooks)) {
+                    nextFragment = new ListOfBooks();
+                }
                 break;
-            case 1:
-                nextFragment = new AddBook();
+            case POSITION_ITEM_ADD_BOOK:
+                if (currentFragment == null || !(currentFragment instanceof AddBook)) {
+                    nextFragment = new AddBook();
+                }
                 break;
-            case 2:
-                nextFragment = new About();
+            case POSITION_ITEM_ABOUT:
+                if (currentFragment == null || !(currentFragment instanceof About)) {
+                    nextFragment = new About();
+                }
                 break;
 
         }
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, nextFragment)
-                .addToBackStack((String) title)
-                .commit();
+        if (nextFragment != null) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, nextFragment)
+                    .addToBackStack((String) title)
+                    .commit();
+
+            //if twopane available
+            View right_container = findViewById(R.id.right_container);
+            if(right_container != null){
+                //and if need two pane, show right container
+                if (nextFragment instanceof ListOfBooks) {
+                    right_container.setVisibility(View.VISIBLE);
+                }
+                else {
+                    right_container.setVisibility(View.GONE);
+                }
+            }
+        }
     }
 
     public void setTitle(int titleId) {
         title = getString(titleId);
+
+        //FIX : update actionbar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(title);
+
+        //FIX : update navigationDrawler
+        switch (titleId) {
+            case R.string.books:
+                navigationDrawerFragment.changeCheckedItem(POSITION_ITEM_LIST_OF_BOOK);
+                break;
+            case R.string.scan:
+                navigationDrawerFragment.changeCheckedItem(POSITION_ITEM_ADD_BOOK);
+                break;
+            case R.string.about:
+                navigationDrawerFragment.changeCheckedItem(POSITION_ITEM_ABOUT);
+                break;
+        }
     }
 
     public void restoreActionBar() {
@@ -138,7 +180,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         if(findViewById(R.id.right_container) != null){
             int id = R.id.right_container;
             Fragment fragment = BookDetail.createFragment(
-                    getIntent().getStringExtra(BookDetail.EAN_KEY)
+                    ean
             );
             getSupportFragmentManager().beginTransaction()
                     .replace(id, fragment)

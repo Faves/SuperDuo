@@ -34,6 +34,7 @@
         </activity>
         <activity
             android:name=".ScannerActivity"
+            android:label="@string/scan"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -41,7 +42,7 @@
         </activity>
         <activity
             android:name=".BookDetailActivity"
-            android:label="@string/title_activity_book_detail"
+            android:label="@string/book_detail"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

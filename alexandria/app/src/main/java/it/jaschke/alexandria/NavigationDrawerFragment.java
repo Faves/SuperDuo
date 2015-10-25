@@ -205,6 +205,12 @@ public class NavigationDrawerFragment extends Fragment {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
     }
+    public void changeCheckedItem(int position) {
+        mCurrentSelectedPosition = position;
+        if (mDrawerListView != null) {
+            mDrawerListView.setItemChecked(position, true);
+        }
+    }
 
     @Override
     public void onAttach(Activity activity) {

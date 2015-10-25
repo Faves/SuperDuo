@@ -19,16 +19,10 @@ public class About extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_about, container, false);
+
+        //FIX : change title here to update actionbar on backstack
+        getActivity().setTitle(R.string.about);
+
         return rootView;
     }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.setTitle(R.string.about);
-    }
-
 }

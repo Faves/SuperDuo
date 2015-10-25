@@ -83,7 +83,15 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
                 bookIntent.putExtra(BookService.EAN, ean);
                 bookIntent.setAction(BookService.DELETE_BOOK);
                 getActivity().startService(bookIntent);
-                getActivity().getSupportFragmentManager().popBackStack();
+
+                //back only with tablet and if has history
+                if (
+                        rootView.findViewById(R.id.right_container)!=null &&
+                        getActivity().getSupportFragmentManager().getBackStackEntryCount() > 1) {
+                    getActivity().getSupportFragmentManager().popBackStack();
+                } else {
+                    getActivity().finish();
+                }
             }
         });
         return rootView;
@@ -158,21 +166,16 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
 
     }
 
+    /*
+    //onPause must not call onDestroyView
+    //no popBackStack here : cf Master/Detail flow
     @Override
     public void onPause() {
         super.onDestroyView();
         if(MainActivity.IS_TABLET && rootView.findViewById(R.id.right_container)==null){
             getActivity().getSupportFragmentManager().popBackStack();
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.setTitle(R.string.book_detail);
-    }
+    }*/
 
 
     private void initShareActionWithData() {

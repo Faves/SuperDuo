@@ -41,6 +41,10 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        //FIX : change title here to update actionbar on backstack
+        getActivity().setTitle(R.string.books);
+
+
         Cursor cursor = getActivity().getContentResolver().query(
                 AlexandriaContract.BookEntry.CONTENT_URI,
                 null, // leaving "columns" null just returns all the columns.
@@ -125,11 +129,4 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         bookListAdapter.swapCursor(null);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.setTitle(R.string.books);
-    }
 }
