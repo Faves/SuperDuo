@@ -37,18 +37,15 @@ public class ScoresService extends IntentService
     }
 
     @Override
-    protected void onHandleIntent(Intent intent)
-    {
-        getData("n2");
-        getData("p2");
-
-        return;
+    protected void onHandleIntent(Intent intent) {
+        getData("n2");//data from next 2 days
+        getData("p2");//data from past 2 days
     }
 
     private void getData (String timeFrame)
     {
         //Creating fetch URL
-        final String BASE_URL = "http://api.football-data.org/alpha/fixtures"; //Base URL
+        final String BASE_URL = getString(R.string.api_base_url); //Base URL
         final String QUERY_TIME_FRAME = "timeFrame"; //Time Frame parameter to determine days
         //final String QUERY_MATCH_DAY = "matchday";
 
@@ -136,21 +133,21 @@ public class ScoresService extends IntentService
         //JSON data
         // This set of league codes is for the 2015/2016 season. In fall of 2016, they will need to
         // be updated. Feel free to use the codes
-        final String BUNDESLIGA1 = "394";
-        final String BUNDESLIGA2 = "395";
-        final String LIGUE1 = "396";
-        final String LIGUE2 = "397";
-        final String PREMIER_LEAGUE = "398";
-        final String PRIMERA_DIVISION = "399";
-        final String SEGUNDA_DIVISION = "400";
-        final String SERIE_A = "401";
-        final String PRIMERA_LIGA = "402";
-        final String Bundesliga3 = "403";
-        final String EREDIVISIE = "404";
+        final String BUNDESLIGA1 = getString(R.string.api_league_code_bundesliga1);
+        final String BUNDESLIGA2 = getString(R.string.api_league_code_bundesliga2);
+        final String LIGUE1 = getString(R.string.api_league_code_ligue1);
+        final String LIGUE2 = getString(R.string.api_league_code_ligue2);
+        final String PREMIER_LEAGUE = getString(R.string.api_league_code_premier_league);
+        final String PRIMERA_DIVISION = getString(R.string.api_league_code_primera_division);
+        final String SEGUNDA_DIVISION = getString(R.string.api_league_code_segunda_division);
+        final String SERIE_A = getString(R.string.api_league_code_serie_a);
+        final String PRIMERA_LIGA = getString(R.string.api_league_code_primera_liga);
+        final String Bundesliga3 = getString(R.string.api_league_code_bundesliga3);
+        final String EREDIVISIE = getString(R.string.api_league_code_eredivisie);
 
 
-        final String SEASON_LINK = "http://api.football-data.org/alpha/soccerseasons/";
-        final String MATCH_LINK = "http://api.football-data.org/alpha/fixtures/";
+        final String SEASON_LINK = getString(R.string.api_base_season_link);
+        final String MATCH_LINK = getString(R.string.api_base_match_link);
         final String FIXTURES = "fixtures";
         final String LINKS = "_links";
         final String SOCCER_SEASON = "soccerseason";
@@ -246,15 +243,6 @@ public class ScoresService extends IntentService
                     match_values.put(DatabaseContract.scores_table.AWAY_GOALS_COL,Away_goals);
                     match_values.put(DatabaseContract.scores_table.LEAGUE_COL,League);
                     match_values.put(DatabaseContract.scores_table.MATCH_DAY,match_day);
-                    //log spam
-
-                    //Log.v(LOG_TAG,match_id);
-                    //Log.v(LOG_TAG,mDate);
-                    //Log.v(LOG_TAG,mTime);
-                    //Log.v(LOG_TAG,Home);
-                    //Log.v(LOG_TAG,Away);
-                    //Log.v(LOG_TAG,Home_goals);
-                    //Log.v(LOG_TAG,Away_goals);
 
                     values.add(match_values);
                 }
