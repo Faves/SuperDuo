@@ -163,6 +163,8 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
                     .error(R.drawable.ic_launcher)
                     .into((ImageView) rootView.findViewById(R.id.fullBookCover));
             rootView.findViewById(R.id.fullBookCover).setVisibility(View.VISIBLE);
+        } else {
+            ((ImageView) rootView.findViewById(R.id.fullBookCover)).setImageResource(R.drawable.ic_launcher);
         }
 
         String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
