@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import barqsoft.footballscores.service.ScoresService;
+
 public class MainActivity extends ActionBarActivity
 {
     public static int selected_match_id;
@@ -19,7 +21,14 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(LOG_TAG, "Reached MainActivity onCreate");
+
         if (savedInstanceState == null) {
+            //FIX : update score only if application start (or restart)
+            Intent service_start = new Intent(this, ScoresService.class);
+            service_start.setAction(ScoresService.FETCH_SCORES);
+            startService(service_start);
+
+            //pager
             my_main = new PagerFragment();
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, my_main)

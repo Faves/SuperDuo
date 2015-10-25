@@ -30,11 +30,6 @@ public class MatchesOfDayFragment extends Fragment implements LoaderManager.Load
     {
     }
 
-    private void update_scores()
-    {
-        Intent service_start = new Intent(getActivity(), ScoresService.class);
-        getActivity().startService(service_start);
-    }
     public void setFragmentDate(String date)
     {
         fragmentdate[0] = date;
@@ -42,7 +37,6 @@ public class MatchesOfDayFragment extends Fragment implements LoaderManager.Load
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
-        update_scores();
         View rootView = inflater.inflate(R.layout.fragment_matches_of_day, container, false);
         final ListView score_list = (ListView) rootView.findViewById(R.id.scores_list);
         mAdapter = new MatchesOfDayAdapter(getActivity(),null,0);

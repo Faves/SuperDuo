@@ -31,6 +31,9 @@ import barqsoft.footballscores.R;
 public class ScoresService extends IntentService
 {
     public static final String LOG_TAG = "ScoresService";
+
+    public static final String FETCH_SCORES = "barqsoft.footballscores.service.action.FETCH_SCORES";
+
     public ScoresService()
     {
         super("ScoresService");
@@ -38,8 +41,13 @@ public class ScoresService extends IntentService
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        getData("n2");//data from next 2 days
-        getData("p2");//data from past 2 days
+        if (intent != null) {
+            final String action = intent.getAction();
+            if (FETCH_SCORES.equals(action)) {
+                getData("n2");//data from next 2 days
+                getData("p2");//data from past 2 days
+            }
+        }
     }
 
     private void getData (String timeFrame)
