@@ -107,8 +107,15 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
             }
         }
 
+        //if use backStack, pop
         if(bookEntryCount > 0) {
             fm.popBackStack();
+        }
+        //else, only remove the fragment
+        else {
+            fm.beginTransaction()
+                    .remove(BookDetail.this)
+                    .commit();
         }
     }
 

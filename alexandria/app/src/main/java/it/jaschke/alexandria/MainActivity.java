@@ -130,6 +130,18 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 navigationDrawerFragment.changeCheckedItem(POSITION_ITEM_ABOUT);
                 break;
         }
+        //if twopane available
+        View right_container = findViewById(R.id.right_container);
+        if(right_container != null){
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.container);
+            //and if need two pane, show right container
+            if (currentFragment instanceof ListOfBooks) {
+                right_container.setVisibility(View.VISIBLE);
+            }
+            else {
+                right_container.setVisibility(View.GONE);
+            }
+        }
     }
 
     public void restoreActionBar() {
@@ -182,9 +194,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             Fragment fragment = BookDetail.createFragment(
                     ean
             );
+            //FIX : no backSack for Book detail because book can be removed and not its fragments
             getSupportFragmentManager().beginTransaction()
                     .replace(id, fragment)
-                    .addToBackStack(getString(R.string.book_detail))
+                    //.addToBackStack(getString(R.string.book_detail))
                     .commit();
         } else {
             BookDetailActivity.startActivity(MainActivity.this, ean);
