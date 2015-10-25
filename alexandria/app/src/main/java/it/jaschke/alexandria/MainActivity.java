@@ -134,20 +134,19 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     @Override
     public void onItemSelected(String ean) {
-        Bundle args = new Bundle();
-        args.putString(BookDetail.EAN_KEY, ean);
-
-        BookDetail fragment = new BookDetail();
-        fragment.setArguments(args);
-
-        int id = R.id.container;
+        //Implements Master/Detail flow
         if(findViewById(R.id.right_container) != null){
-            id = R.id.right_container;
+            int id = R.id.right_container;
+            Fragment fragment = BookDetail.createFragment(
+                    getIntent().getStringExtra(BookDetail.EAN_KEY)
+            );
+            getSupportFragmentManager().beginTransaction()
+                    .replace(id, fragment)
+                    .addToBackStack(getString(R.string.book_detail))
+                    .commit();
+        } else {
+            BookDetailActivity.startActivity(MainActivity.this, ean);
         }
-        getSupportFragmentManager().beginTransaction()
-                .replace(id, fragment)
-                .addToBackStack("Book Detail")
-                .commit();
 
     }
 
@@ -160,9 +159,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }
     }
 
+    /*
+    //not need : only used with BookDetail and it was replaced by Master/Detail flow
     public void goBack(View view){
         getSupportFragmentManager().popBackStack();
-    }
+    }*/
 
     private boolean isTablet() {
         return (getApplicationContext().getResources().getConfiguration().screenLayout
