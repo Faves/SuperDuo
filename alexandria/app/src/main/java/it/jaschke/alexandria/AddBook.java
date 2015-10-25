@@ -17,21 +17,24 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+
+import com.squareup.picasso.Picasso;
 
 import it.jaschke.alexandria.data.AlexandriaContract;
 import it.jaschke.alexandria.services.BookService;
-import it.jaschke.alexandria.services.DownloadImage;
 
 
 public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int REQUEST_CODE_OPEN_SCANNER = 1;
-    private EditText ean;
+
     private final int LOADER_ID = 1;
-    private View rootView;
     private final String EAN_CONTENT="eanContent";
 
+    private EditText ean;
+    private View rootView;
+
+    private Picasso mPicasso;
 
 
     public AddBook(){
@@ -43,6 +46,13 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         if(ean!=null) {
             outState.putString(EAN_CONTENT, ean.getText().toString());
         }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //init Picasso
+        mPicasso = Picasso.with(getContext());
     }
 
     @Override
@@ -156,7 +166,10 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         ((TextView) rootView.findViewById(R.id.authors)).setText(authors.replace(",","\n"));
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         if(Patterns.WEB_URL.matcher(imgUrl).matches()){
-            new DownloadImage((ImageView) rootView.findViewById(R.id.bookCover)).execute(imgUrl);
+            mPicasso.load(imgUrl)
+                    .placeholder(R.drawable.ic_launcher)
+                    .error(R.drawable.ic_launcher)
+                    .into((ImageView) rootView.findViewById(R.id.bookCover));
             rootView.findViewById(R.id.bookCover).setVisibility(View.VISIBLE);
         }
 
