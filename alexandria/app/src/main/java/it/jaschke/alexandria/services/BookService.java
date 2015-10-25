@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -84,12 +85,15 @@ public class BookService extends IntentService {
                 null  // sort order
         );
 
-        if(bookEntry.getCount()>0){
-            bookEntry.close();
-            return;
-        }
+        //FIX WARNING : Method invocation 'bookEntry.getCount()' may produce 'java.lang.NullPointerException'
+        if (bookEntry != null) {
+            if (bookEntry.getCount() > 0) {
+                bookEntry.close();
+                return;
+            }
 
-        bookEntry.close();
+            bookEntry.close();
+        }
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -144,60 +148,68 @@ public class BookService extends IntentService {
 
         }
 
-        final String ITEMS = "items";
+        //Checks if the data is returned
+        //FIX : Alexandria does not crash while searching for a book without an internet connection.
+        if (!TextUtils.isEmpty(bookJsonString)) {
+            final String ITEMS = "items";
 
-        final String VOLUME_INFO = "volumeInfo";
+            final String VOLUME_INFO = "volumeInfo";
 
-        final String TITLE = "title";
-        final String SUBTITLE = "subtitle";
-        final String AUTHORS = "authors";
-        final String DESC = "description";
-        final String CATEGORIES = "categories";
-        final String IMG_URL_PATH = "imageLinks";
-        final String IMG_URL = "thumbnail";
+            final String TITLE = "title";
+            final String SUBTITLE = "subtitle";
+            final String AUTHORS = "authors";
+            final String DESC = "description";
+            final String CATEGORIES = "categories";
+            final String IMG_URL_PATH = "imageLinks";
+            final String IMG_URL = "thumbnail";
 
-        try {
-            JSONObject bookJson = new JSONObject(bookJsonString);
-            JSONArray bookArray;
-            if(bookJson.has(ITEMS)){
-                bookArray = bookJson.getJSONArray(ITEMS);
-            }else{
-                Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
-                messageIntent.putExtra(MainActivity.MESSAGE_KEY,getResources().getString(R.string.not_found));
-                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
-                return;
+            try {
+                JSONObject bookJson = new JSONObject(bookJsonString);
+                JSONArray bookArray;
+                if (bookJson.has(ITEMS)) {
+                    bookArray = bookJson.getJSONArray(ITEMS);
+                } else {
+                    Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
+                    messageIntent.putExtra(MainActivity.MESSAGE_KEY, getResources().getString(R.string.not_found));
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
+                    return;
+                }
+
+                JSONObject bookInfo = ((JSONObject) bookArray.get(0)).getJSONObject(VOLUME_INFO);
+
+                String title = bookInfo.getString(TITLE);
+
+                String subtitle = "";
+                if (bookInfo.has(SUBTITLE)) {
+                    subtitle = bookInfo.getString(SUBTITLE);
+                }
+
+                String desc = "";
+                if (bookInfo.has(DESC)) {
+                    desc = bookInfo.getString(DESC);
+                }
+
+                String imgUrl = "";
+                if (bookInfo.has(IMG_URL_PATH) && bookInfo.getJSONObject(IMG_URL_PATH).has(IMG_URL)) {
+                    imgUrl = bookInfo.getJSONObject(IMG_URL_PATH).getString(IMG_URL);
+                }
+
+                writeBackBook(ean, title, subtitle, desc, imgUrl);
+
+                if (bookInfo.has(AUTHORS)) {
+                    writeBackAuthors(ean, bookInfo.getJSONArray(AUTHORS));
+                }
+                if (bookInfo.has(CATEGORIES)) {
+                    writeBackCategories(ean, bookInfo.getJSONArray(CATEGORIES));
+                }
+
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, "Error ", e);
             }
-
-            JSONObject bookInfo = ((JSONObject) bookArray.get(0)).getJSONObject(VOLUME_INFO);
-
-            String title = bookInfo.getString(TITLE);
-
-            String subtitle = "";
-            if(bookInfo.has(SUBTITLE)) {
-                subtitle = bookInfo.getString(SUBTITLE);
-            }
-
-            String desc="";
-            if(bookInfo.has(DESC)){
-                desc = bookInfo.getString(DESC);
-            }
-
-            String imgUrl = "";
-            if(bookInfo.has(IMG_URL_PATH) && bookInfo.getJSONObject(IMG_URL_PATH).has(IMG_URL)) {
-                imgUrl = bookInfo.getJSONObject(IMG_URL_PATH).getString(IMG_URL);
-            }
-
-            writeBackBook(ean, title, subtitle, desc, imgUrl);
-
-            if(bookInfo.has(AUTHORS)) {
-                writeBackAuthors(ean, bookInfo.getJSONArray(AUTHORS));
-            }
-            if(bookInfo.has(CATEGORIES)){
-                writeBackCategories(ean,bookInfo.getJSONArray(CATEGORIES) );
-            }
-
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, "Error ", e);
+        } else {
+            Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
+            messageIntent.putExtra(MainActivity.MESSAGE_KEY, getResources().getString(R.string.no_networks));
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
         }
     }
 
