@@ -84,4 +84,11 @@ public class Utilies
             default: return R.drawable.no_icon;
         }
     }
+
+    public static int inversePositionForRTL(int position, int total) {
+        //author : Udacity student josen (Jose)
+        //source : https://discussions.udacity.com/t/layout-mirroring-rtl-what-is-expected/30120/16
+
+        return total - position - 1;
+    }
 }

@@ -1,6 +1,7 @@
 package barqsoft.footballscores;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -44,9 +45,10 @@ public class PagerFragment extends Fragment
     private class MyPageAdapter extends FragmentStatePagerAdapter
     {
         @Override
-        public Fragment getItem(int i)
+        public Fragment getItem(int position)
         {
-            return viewFragments[i];
+            position = getAdapterPositionFromPagerPosition(position);
+            return viewFragments[position];
         }
 
         @Override
@@ -63,6 +65,7 @@ public class PagerFragment extends Fragment
         @Override
         public CharSequence getPageTitle(int position)
         {
+            position = getAdapterPositionFromPagerPosition(position);
             return getDayName(getActivity(),System.currentTimeMillis()+((position-2)*86400000));
         }
         public String getDayName(Context context, long dateInMillis) {
@@ -90,6 +93,13 @@ public class PagerFragment extends Fragment
                 SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
                 return dayFormat.format(dateInMillis);
             }
+        }
+
+        private int getAdapterPositionFromPagerPosition(int pagerPosition) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && mPagerHandler.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
+                return Utilies.inversePositionForRTL(pagerPosition, getCount());
+            }
+            return pagerPosition;
         }
     }
 }
