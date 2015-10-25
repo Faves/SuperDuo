@@ -30,10 +30,10 @@ import barqsoft.footballscores.R;
  */
 public class ScoresService extends IntentService
 {
-    public static final String LOG_TAG = "myFetchService";
+    public static final String LOG_TAG = "ScoresService";
     public ScoresService()
     {
-        super("myFetchService");
+        super("ScoresService");
     }
 
     @Override
