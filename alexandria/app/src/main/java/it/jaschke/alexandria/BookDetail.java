@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.view.MenuItemCompat;
@@ -85,16 +86,30 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
                 getActivity().startService(bookIntent);
 
                 //back only with tablet and if has history
-                if (
-                        rootView.findViewById(R.id.right_container)!=null &&
-                        getActivity().getSupportFragmentManager().getBackStackEntryCount() > 1) {
-                    getActivity().getSupportFragmentManager().popBackStack();
+                if (MainActivity.IS_TABLET) {
+                    manageTabletStack();
                 } else {
                     getActivity().finish();
                 }
             }
         });
         return rootView;
+    }
+
+    private void manageTabletStack() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+
+        int bookEntryCount = 0;
+        for(int entry = 0; entry < fm.getBackStackEntryCount(); entry++){
+            String frag = fm.getBackStackEntryAt(entry).getName();
+            if(frag != null && frag.contains(getString(R.string.book_detail))) {
+                bookEntryCount++;
+            }
+        }
+
+        if(bookEntryCount > 0) {
+            fm.popBackStack();
+        }
     }
 
 

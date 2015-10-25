@@ -1,13 +1,17 @@
 package it.jaschke.alexandria;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import it.jaschke.alexandria.api.BookListAdapter;
 import it.jaschke.alexandria.api.Callback;
@@ -23,14 +28,18 @@ import it.jaschke.alexandria.data.AlexandriaContract;
 
 public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final String UPDATE_LIST_EVENT = "UPDATE_LIST_EVENT";
+
     private BookListAdapter bookListAdapter;
     private ListView bookList;
     private int position = ListView.INVALID_POSITION;
     private EditText searchText;
+    private BroadcastReceiver updateListReciever;
 
     private final int LOADER_ID = 10;
 
     public ListOfBooks() {
+        updateListReciever = null;
     }
 
     @Override
@@ -129,4 +138,32 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         bookListAdapter.swapCursor(null);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (updateListReciever == null) {
+            updateListReciever = new UpdateListReciever();
+            IntentFilter intentFilter = new IntentFilter(ListOfBooks.UPDATE_LIST_EVENT);
+            LocalBroadcastManager.getInstance(context).registerReceiver(updateListReciever, intentFilter);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Context context = getContext();
+
+        if (updateListReciever != null && context != null) {
+            LocalBroadcastManager.getInstance(context).unregisterReceiver(updateListReciever);
+            updateListReciever = null;
+        }
+    }
+
+    private class UpdateListReciever extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            restartLoader();
+        }
+    }
 }

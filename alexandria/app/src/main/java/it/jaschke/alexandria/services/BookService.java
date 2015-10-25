@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import it.jaschke.alexandria.ListOfBooks;
 import it.jaschke.alexandria.MainActivity;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
@@ -64,6 +65,11 @@ public class BookService extends IntentService {
     private void deleteBook(String ean) {
         if(ean!=null) {
             getContentResolver().delete(AlexandriaContract.BookEntry.buildBookUri(Long.parseLong(ean)), null, null);
+
+            //send update message
+            Intent messageIntent = new Intent(ListOfBooks.UPDATE_LIST_EVENT);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
+
         }
     }
 
@@ -202,6 +208,10 @@ public class BookService extends IntentService {
                 if (bookInfo.has(CATEGORIES)) {
                     writeBackCategories(ean, bookInfo.getJSONArray(CATEGORIES));
                 }
+
+                //send update message
+                Intent messageIntent = new Intent(ListOfBooks.UPDATE_LIST_EVENT);
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
 
             } catch (JSONException e) {
                 Log.e(LOG_TAG, "Error ", e);
