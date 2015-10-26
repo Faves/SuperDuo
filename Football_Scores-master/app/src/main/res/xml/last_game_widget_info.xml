@@ -4,7 +4,7 @@
     android:minResizeHeight="40dp"
     android:minWidth="110dp"
     android:minHeight="@dimen/widget_last_game_default_height"
-    android:updatePeriodMillis="60000"
+    android:updatePeriodMillis="1800000"
     android:previewImage="@drawable/last_game_appwidget_preview"
     android:initialLayout="@layout/last_game_widget"
     android:resizeMode="horizontal|vertical"
