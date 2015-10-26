@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -33,6 +34,8 @@ public class ScoresService extends IntentService
     public static final String LOG_TAG = "ScoresService";
 
     public static final String FETCH_SCORES = "barqsoft.footballscores.service.action.FETCH_SCORES";
+
+    public static final String ACTION_DATA_UPDATED = "barqsoft.footballscores.service.ACTION_DATA_UPDATED";
 
     public ScoresService()
     {
@@ -152,6 +155,7 @@ public class ScoresService extends IntentService
         final String PRIMERA_LIGA = getString(R.string.api_league_code_primera_liga);
         final String Bundesliga3 = getString(R.string.api_league_code_bundesliga3);
         final String EREDIVISIE = getString(R.string.api_league_code_eredivisie);
+        final String CHAMPIONS_LEAGUE = getString(R.string.api_league_code_champion_league);
 
 
         final String SEASON_LINK = getString(R.string.api_base_season_link);
@@ -197,11 +201,15 @@ public class ScoresService extends IntentService
                 //add leagues here in order to have them be added to the DB.
                 // If you are finding no data in the app, check that this contains all the leagues.
                 // If it doesn't, that can cause an empty DB, bypassing the dummy data routine.
-                if(     League.equals(PREMIER_LEAGUE)      ||
+                if(     League.equals(BUNDESLIGA1)         ||
+                        League.equals(LIGUE1)              ||
+                        League.equals(PREMIER_LEAGUE)      ||
+                        League.equals(PRIMERA_DIVISION)    ||
+                        League.equals(SEGUNDA_DIVISION)    ||
                         League.equals(SERIE_A)             ||
-                        League.equals(BUNDESLIGA1)         ||
-                        League.equals(BUNDESLIGA2)         ||
-                        League.equals(PRIMERA_DIVISION)     )
+                        League.equals(PRIMERA_DIVISION)    ||
+                        League.equals(EREDIVISIE)          ||
+                        League.equals(CHAMPIONS_LEAGUE)     )
                 {
                     match_id = match_data.getJSONObject(LINKS).getJSONObject(SELF).
                             getString("href");
@@ -260,6 +268,12 @@ public class ScoresService extends IntentService
             values.toArray(insert_data);
             inserted_data = mContext.getContentResolver().bulkInsert(
                     DatabaseContract.BASE_CONTENT_URI,insert_data);
+
+
+            //send info to widget
+            Intent broadcastIntent = new Intent(ACTION_DATA_UPDATED);
+            broadcastIntent.setPackage(getPackageName());   // Setting the package ensures that only components in our app will receive the broadcast
+            sendBroadcast(broadcastIntent);
 
             //Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
         }

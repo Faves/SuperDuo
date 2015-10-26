@@ -1,0 +1,57 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="@dimen/widget_margin">
+
+    <LinearLayout
+        android:id="@+id/widget"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/home_bg">
+
+        <TextView android:id="@+id/appwidget_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="@string/test_text"
+            android:textColor="@android:color/primary_text_light"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            android:layout_margin="1dp" />
+
+        <TextView android:id="@+id/appwidget_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            tools:text="@string/test_text"
+            android:textColor="@android:color/primary_text_light"
+            android:textSize="12sp"
+            android:layout_margin="1dp"
+            android:singleLine="true"
+            android:ellipsize="end"/>
+
+        <TextView android:id="@+id/appwidget_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            tools:text="@string/test_text"
+            android:textColor="@android:color/primary_text_light"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_margin="1dp" />
+
+        <TextView android:id="@+id/appwidget_away"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            tools:text="@string/test_text"
+            android:textColor="@android:color/primary_text_light"
+            android:textSize="12sp"
+            android:layout_margin="1dp"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+    </LinearLayout>
+
+</FrameLayout>

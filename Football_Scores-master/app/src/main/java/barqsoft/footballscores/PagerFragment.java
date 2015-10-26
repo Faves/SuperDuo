@@ -97,7 +97,7 @@ public class PagerFragment extends Fragment
 
         private int getAdapterPositionFromPagerPosition(int pagerPosition) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && mPagerHandler.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL) {
-                return Utilies.inversePositionForRTL(pagerPosition, getCount());
+                return Utilities.inversePositionForRTL(pagerPosition, getCount());
             }
             return pagerPosition;
         }

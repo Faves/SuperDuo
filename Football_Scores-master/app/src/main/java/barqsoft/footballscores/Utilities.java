@@ -5,27 +5,33 @@ import android.content.Context;
 /**
  * Created by yehya khaled on 3/3/2015.
  */
-public class Utilies
+public class Utilities
 {
-    public static final int SERIE_A = 357;
-    public static final int PREMIER_LEGAUE = 354;
-    public static final int CHAMPIONS_LEAGUE = 362;
-    public static final int PRIMERA_DIVISION = 358;
-    public static final int BUNDESLIGA = 351;
-    public static String getLeague(Context context, int league_num)
-    {
-        switch (league_num)
-        {
-            case SERIE_A : return context.getString(R.string.league_serie_a);
-            case PREMIER_LEGAUE : return context.getString(R.string.league_premier_league);
-            case CHAMPIONS_LEAGUE : return context.getString(R.string.league_uefa_champions_league);
-            case PRIMERA_DIVISION : return context.getString(R.string.league_primera_division);
-            case BUNDESLIGA : return context.getString(R.string.league_bundesliga);
-            default: return context.getString(R.string.league_unknown);
-        }
+    public static String getLeague(Context context, int league_num) {
+        final int BUNDESLIGA        = Integer.parseInt(context.getString(R.string.api_league_code_bundesliga1));
+        final int LIGUE             = Integer.parseInt(context.getString(R.string.api_league_code_ligue1));
+        final int PREMIER_LEAGUE    = Integer.parseInt(context.getString(R.string.api_league_code_premier_league));
+        final int PRIMERA_DIVISION  = Integer.parseInt(context.getString(R.string.api_league_code_primera_division));
+        final int SEGUNDA_DIVISION  = Integer.parseInt(context.getString(R.string.api_league_code_segunda_division));
+        final int SERIE_A           = Integer.parseInt(context.getString(R.string.api_league_code_serie_a));
+        final int PRIMERA_LIGA      = Integer.parseInt(context.getString(R.string.api_league_code_primera_liga));
+        final int EREDIVISIE        = Integer.parseInt(context.getString(R.string.api_league_code_eredivisie));
+        final int CHAMPIONS_LEAGUE  = Integer.parseInt(context.getString(R.string.api_league_code_champion_league));
+
+        if (league_num == BUNDESLIGA) return context.getString(R.string.league_bundesliga);
+        else if (league_num == LIGUE) return context.getString(R.string.league_ligue1);
+        else if (league_num == PREMIER_LEAGUE) return context.getString(R.string.league_premier_league);
+        else if (league_num == PRIMERA_DIVISION) return context.getString(R.string.league_primera_division);
+        else if (league_num == SEGUNDA_DIVISION) return context.getString(R.string.league_segunda_division);
+        else if (league_num == SERIE_A) return context.getString(R.string.league_serie_a);
+        else if (league_num == PRIMERA_LIGA) return context.getString(R.string.league_primera_liga);
+        else if (league_num == EREDIVISIE) return context.getString(R.string.league_eredivisie);
+        else if (league_num == CHAMPIONS_LEAGUE) return context.getString(R.string.league_uefa_champions_league);
+        else return context.getString(R.string.league_unknown);
     }
-    public static String getMatchDay(Context context, int match_day,int league_num)
-    {
+    public static String getMatchDay(Context context, int match_day,int league_num) {
+        final int CHAMPIONS_LEAGUE = Integer.parseInt(context.getString(R.string.api_league_code_champion_league));
+
         if(league_num == CHAMPIONS_LEAGUE)
         {
             if (match_day <= 6)
