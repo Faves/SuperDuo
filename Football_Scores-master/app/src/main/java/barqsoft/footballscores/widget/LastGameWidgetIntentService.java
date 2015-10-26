@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import barqsoft.footballscores.DatabaseContract;
+import barqsoft.footballscores.data.DatabaseContract;
 import barqsoft.footballscores.MainActivity;
 import barqsoft.footballscores.MatchesOfDayAdapter;
 import barqsoft.footballscores.R;
